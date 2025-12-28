@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ShoppingBag } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { totalItems, setIsCartOpen } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,8 +58,20 @@ const Header = () => {
 
           {/* Right Side */}
           <div className="flex items-center gap-4">
-            <button className="p-2 text-foreground/80 hover:text-foreground transition-colors">
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 text-foreground/80 hover:text-foreground transition-colors"
+            >
               <ShoppingBag size={22} />
+              {totalItems > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs font-bold rounded-full flex items-center justify-center"
+                >
+                  {totalItems > 9 ? '9+' : totalItems}
+                </motion.span>
+              )}
             </button>
 
             {/* Mobile Menu Button */}
